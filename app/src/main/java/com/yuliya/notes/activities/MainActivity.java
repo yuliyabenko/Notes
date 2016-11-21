@@ -13,9 +13,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.yuliya.notes.R;
 import com.yuliya.notes.adapters.NotesAdapter;
+import com.yuliya.notes.adapters.NotesAdapter.NotesViewHolder;
 import com.yuliya.notes.db.NotesContract;
 import com.yuliya.notes.model.Note;
 
@@ -26,7 +28,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
+public class MainActivity extends AppCompatActivity implements
+        LoaderManager.LoaderCallbacks<Cursor>, View.OnClickListener {
 
     @BindView(R.id.notes_recycler_view)
     protected RecyclerView recyclerView;
@@ -106,10 +109,22 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         NotesAdapter adapter = new NotesAdapter();
         recyclerView.setAdapter(adapter);
         adapter.setDataSource(dataSource);
+        adapter.setOnItemClickListener( view -> {
+            NotesViewHolder holder = (NotesViewHolder) recyclerView.findContainingViewHolder(view);
+            if(holder == null) return;
+            startActivity(EditNoteActivity.newInstance(this, holder.getNote().getId()));
+        });
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
 
+    }
+
+    @Override
+    public void onClick(View view) {
+        NotesViewHolder holder = (NotesViewHolder) recyclerView.findContainingViewHolder(view);
+        if(holder == null) return;
+        startActivity(EditNoteActivity.newInstance(this, holder.getNote().getId()));
     }
 }
