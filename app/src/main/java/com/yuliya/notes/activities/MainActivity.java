@@ -1,19 +1,24 @@
 package com.yuliya.notes.activities;
 
+import android.content.ContentValues;
 import android.database.Cursor;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import com.yuliya.notes.R;
 import com.yuliya.notes.adapters.NotesAdapter;
@@ -31,10 +36,17 @@ import butterknife.OnClick;
 public class MainActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<Cursor>, View.OnClickListener {
 
+    final int MENU_DELETE = 1;
+    final int MENU_SHARE = 2;
+
+
     @BindView(R.id.notes_recycler_view)
     protected RecyclerView recyclerView;
     @BindView(R.id.toolbar)
     protected Toolbar toolbar;
+//    @BindView(R.id.fab_button)
+//    protected FloatingActionButton fab;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +61,26 @@ public class MainActivity extends AppCompatActivity implements
                 false);
         recyclerView.setLayoutManager(layoutManager);
         getSupportLoaderManager().initLoader(R.id.notes_loader, null, this);
+//        registerForContextMenu(fab);
+
+        for(int i = 0; i < 10; i++){
+            ContentValues values = new ContentValues();
+            values.put(NotesContract.TEXT_COLUMN, "ggggggggg " + i);
+            getContentResolver().insert(NotesContract.CONTENT_URI, values);
+        }
+
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        menu.add(0, MENU_DELETE, 0, "Delete");
+        menu.add(0, MENU_SHARE, 0, "Share");
+
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        return super.onContextItemSelected(item);
     }
 
     @Override

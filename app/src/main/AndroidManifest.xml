@@ -15,11 +15,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.EditNoteActivity"></activity>
+        <activity android:name=".activities.EditNoteActivity" />
+
         <provider
-            android:authorities="com.yuliya.notes"
             android:name=".providers.NotesContentProvider"
+            android:authorities="com.yuliya.notes"
             android:exported="false" />
+
+        <activity android:name=".activities.SettingsActivity"></activity>
     </application>
 
 </manifest>
